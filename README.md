@@ -1,126 +1,80 @@
-<div align="center">
+# ComfyUI nodes to use [LivePortrait](https://github.com/KwaiVGI/LivePortrait)
+## Update 2
 
-# 🚀 ComfyUI-Copilot: Your Intelligent Assistant for Comfy-UI
+Added another alternative face detector: https://github.com/1adrianb/face-alignment
 
-<!-- Enhancing Image Generation Development with Smart Assistance -->
+![image](https://github.com/user-attachments/assets/1a77752a-9688-4b6f-9363-736367ad711a)
 
-<h4 align="center">
+As this can use blazeface back camera model (or SFD), it's far better for smaller faces than MediaPipe, that only can use the blazeface short -model.
+The warmup on the first run when using this can take a long time, but subsequent runs are quick.
 
-<div align="center">
-<img src="https://img.shields.io/badge/Version-1.0.0-blue.svg" alt="Version"> 
-<img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-<img src="https://img.shields.io/github/stars/your-repo/ComfyUI-Copilot?color=yellow" alt="Stars">
-<img src="https://img.shields.io/github/issues/your-repo/ComfyUI-Copilot?color=red" alt="Issues">
-<img src="https://img.shields.io/badge/python-3.10%2B-purple.svg" alt="Python">
+Example detection using the blazeface_back_camera:
 
-</h4>
+https://github.com/user-attachments/assets/40b1fdb4-0b1f-4ea8-8322-aa9151055db0
 
+## Update
 
-👾 _**XXTeam**_
+Rework of almost the whole thing that's been in develop is now merged into main, this means old workflows will not work, but everything should be faster and there's lots of new features.
+For legacy purposes the old main branch is moved to the legacy -branch
 
-🏢 [_**Your Organization**_](https://your-org-website.com)
+Changes
+- Added MediaPipe as alternative to Insightface, everything should now be covered under MIT and Apache-2.0 licenses when using it.
+- Proper Vid2vid including smoothing algorhitm (thanks @melMass)
+- Improved speed and efficiency, allows for near realtime view even in Comfy (~80-100ms delay)
+- Restructured nodes for more options
+- Auto skipping frames with no face detected
+- Numerous other things I have forgotten about at this point, it's been a lot
+- Better Mac support on MPS (thanks @Grant-CP
 
-[**Github**](https://github.com/your-repo/ComfyUI-Copilot) 📑  [**Documentation**](https://your-docs-link.com)
+update to this update:
+- converted the landmark runner onnx model to torch model, not something I have done before and I didn't manage to do anything but make it .pth file, so you'll just have to trust me on it.
+  This allows running all this without even having onnxruntime, it runs on GPU and is about just as fast. It's available on the MediaPipe cropper node as option:
+When selected it's automatically downloaded from here: https://huggingface.co/Kijai/LivePortrait_safetensors/blob/main/landmark_model.pth
 
-</div>
-
-
-
-<div align="center">
-    <a href="https://youtu.be/uBllajp38_g" target="_blank">🎥 观看我们的介绍视频</a>
-    <video src="https://youtu.be/uBllajp38_g" />
-</div>
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/uBllajp38_g?si=7xPor_bEr7C-4TXI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-
-![xxx](./s39--d14.mp4)
-[xxxx](./s39--d14.mp4)
-<video src="s39--d14.mp4" />
+![image](https://github.com/user-attachments/assets/c547f55a-9ef7-4bc7-85df-cdbab69a3ca8)
 
 
-## 🌟 Introduction
+# Examples:
 
-Welcome to **ComfyUI-Copilot**, an intelligent assistant built on the Comfy-UI framework that simplifies and enhances the AI algorithm debugging and deployment process through natural language interactions.
+Realtime with webcam feed:
 
-Whether it's generating text, images, or audio, ComfyUI-Copilot offers intuitive node recommendations, workflow building aids, and model querying services to streamline your development process.
+https://github.com/user-attachments/assets/31f77c10-b757-44ae-bb26-39e45ec0b2d9
 
----
+Image2vid:
 
-## 🤔 Why Choose ComfyUI-Copilot?
+https://github.com/user-attachments/assets/cfec0419-d1eb-4e67-8913-890eeb155eef
 
-- **Ease of Use**: Lower the barriers to entry with natural language interaction, making Comfy-UI accessible even for beginners.
-- **Smart Recommendations**: Leverage AI-driven node suggestions and workflow implementations to boost development efficiency.
-- **Real-Time Assistance**: Benefit from round-the-clock interactive support to address any issues encountered during development.
+Vid2Vid: 
 
----
+https://github.com/user-attachments/assets/28438fcb-fbb0-4e4e-baf4-00fe06c455de
 
-## ⚙️ Core Features
 
-- **Interactive Q&A Bot**: Access a robust Q&A platform where users can inquire about model intricacies, node details, and parameter utilization with ease.
-- **Natural Language Node Suggestions**: Employ our advanced search mechanism to swiftly identify desired nodes and enhance workflow construction efficacy.
-<img src="assets/comfycopilot_nodes_recommend.gif"/>
-- **Node Query System**: Dive deeper into nodes by exploring their explanations, parameter definitions, usage tips, and downstream workflow recommendations.
-<img src="assets/comfycopilot_nodes_search.gif"/>
-- **Smart Workflow Assistance**: Automatically discern developer needs to recommend and build fitting workflow frameworks, minimizing manual setup time.
-<img src="assets/工作流检索.png"/>
-- **Model Querying**: Prompt Copilot to seek foundational models and 'lora' based on requirements.
-- **Up-and-Coming Features**:
-  
-  - **Automated Parameter Tuning**: Exploit machine learning algorithms for seamless analysis and optimization of critical workflow parameters.
-  - **Error Diagnosis and Fix Suggestions**: Receive comprehensive error insights and corrective advice to swiftly pinpoint and resolve issues.
+I have converted all the pickle files to safetensors: https://huggingface.co/Kijai/LivePortrait_safetensors/tree/main
 
----
+They go here (and are automatically downloaded if the folder is not present) `ComfyUI/models/liveportrait`
 
-## 🚀 Getting Started
+# Face detectors
 
-**Repository Overview**: Visit the [GitHub Repository](https://code.alibaba-inc.com/aidc-innovation/ComfyUI-Copilot) to access the complete codebase.
+You can either use the original default Insightface, or Google's MediaPipe. 
 
-1. **Installation**:
-   
-   ```bash
-   cd ComfyUI/custom_nodes
-   git clone git@gitlab.alibaba-inc.com:aidc-innovation/ComfyUI-Copilot.git
-   ```
-   
-   or
-   
-   ```bash
-   cd ComfyUI/custom_nodes
-   git clone http://gitlab.alibaba-inc.com/aidc-innovation/ComfyUI-Copilot.git
-   ```
-2. **Activation**: After running the ComfyUI project, find the Copilot activation button at the top-right corner of the board to launch its service.
-3. **API Key Application**: For internal users, obtain the API key from the [access link](https://aidc-appsmith.alibaba-inc.com/app/comfyui-copilot-website/page1-677648e0b007d02d2b193eeb) and insert it on the Copilot settings page for uninterrupted ComfyUI-Copilot services.
+Biggest difference is the license: Insightface is strictly for NON-COMMERCIAL use.
+MediaPipe is a bit worse at detection, and can't run on GPU in Windows, though it's much faster on CPU compared to Insightface
 
----
+Insightface is not automatically installed, if you wish to use it follow these instructions:
+If you have a working compile environment, installing it can be as easy as:
 
-## 🤝 Contributions
+`pip install insightface`
 
-We welcome any form of contribution! Feel free to make issues, pull requests, or suggest new features.
+or for the portable version, in the ComfyUI_windows_portable -folder:
 
----
+`python_embeded/python.exe -m pip install insightface`
 
-## 📞 Contact Us
+If this fails (and it's likely), you can check the Troubleshooting part of the reactor node for alternative:
 
-For any queries or suggestions, please feel free to contact:
+https://github.com/Gourieff/comfyui-reactor-node
 
----
+For insightface model, extract this to `ComfyUI/models/insightface/buffalo_l`:
 
-## 📄 License
+https://github.com/deepinsight/insightface/releases/download/v0.7/buffalo_l.zip
 
-This project is licensed under the MIT License - see the [LICENSE](https://opensource.org/licenses/MIT) file for details.
-
----
-
-### [Image Placement Placeholder]
-
-_(A visually engaging illustration or screenshot of ComfyUI-Copilot in action, highlighting its interface and showcasing user interaction.)_
-
----
-
-This refactored README not only enhances the technical prowess of ComfyUI-Copilot but also makes it more appealing and accessible to users. It strategically spots where visual aids could further engage viewers and clarifies the setup and utilization of the tool.
-
-<div align="center">
-    <img src="path/to/your/image.gif" alt="视频介绍" width="600" />
-</div>
-
-## 🌟 Introduction
+*Please note that insightface license is non-commercial in nature.*
